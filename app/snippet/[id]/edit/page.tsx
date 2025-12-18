@@ -1,22 +1,23 @@
+export const dynamic = "force-dynamic";
+
 import EditSnippetForm from "@/components/EditSnippetForm";
 import { prisma } from "@/lib/prisma";
-import React from "react";
+import { notFound } from "next/navigation";
 
-const EditPageSnippet = async ({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
-  const id = parseInt((await params).id);
+type EditPageProps = {
+  params: { id: string };
+};
+
+const EditPageSnippet = async ({ params }: EditPageProps) => {
+  const id = Number(params.id);
+
   const snippet = await prisma.snippet.findUnique({
-    where: {
-      id,
-    },
+    where: { id },
   });
 
-  if (!snippet) return <h1>Snippet not found</h1>;
+  if (!snippet) notFound();
 
-  return <EditSnippetForm snippet = {snippet}/>;
+  return <EditSnippetForm snippet={snippet} />;
 };
 
 export default EditPageSnippet;

@@ -1,20 +1,17 @@
+export const dynamic = "force-dynamic";
+
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import React from "react";
 import * as actions from "@/actions";
 import { notFound } from "next/navigation";
 
-type SnipppetDetailsProps = {
-  params: Promise<{ id: string }>;
+type SnippetDetailsProps = {
+  params: { id: string };
 };
 
-const SnippetDetailPage: React.FC<SnipppetDetailsProps> = async ({
-  params,
-}) => {
-  const id = parseInt((await params).id);
-
-  await new Promise((r) => setTimeout(r, 2000));
+const SnippetDetailPage = async ({ params }: SnippetDetailsProps) => {
+  const id = Number(params.id);
 
   const snippet = await prisma.snippet.findUnique({
     where: { id },
@@ -48,11 +45,3 @@ const SnippetDetailPage: React.FC<SnipppetDetailsProps> = async ({
 };
 
 export default SnippetDetailPage;
-
-export const generateStaticParams = async () => {
-  const snippets = await prisma.snippet.findMany();
-
-  return snippets.map((snippet: (typeof snippets)[number]) => {
-    return { id: snippet.id.toString() };
-  });
-};
