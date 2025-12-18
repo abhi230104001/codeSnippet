@@ -17,9 +17,7 @@ const SnippetDetailPage: React.FC<SnipppetDetailsProps> = async ({
   await new Promise((r) => setTimeout(r, 2000));
 
   const snippet = await prisma.snippet.findUnique({
-    where: {
-      id,
-    },
+    where: { id },
   });
 
   if (!snippet) notFound();
@@ -35,12 +33,13 @@ const SnippetDetailPage: React.FC<SnipppetDetailsProps> = async ({
             <Button>Edit</Button>
           </Link>
           <form action={deleteSnippetActions}>
-            <Button variant={"destructive"} type="submit">
+            <Button variant="destructive" type="submit">
               Delete
             </Button>
           </form>
         </div>
       </div>
+
       <pre className="p-3 bg-gray-200 rounded border-gray-200">
         <code>{snippet.code}</code>
       </pre>
@@ -50,12 +49,10 @@ const SnippetDetailPage: React.FC<SnipppetDetailsProps> = async ({
 
 export default SnippetDetailPage;
 
-
 export const generateStaticParams = async () => {
   const snippets = await prisma.snippet.findMany();
 
-  return snippets.map((snippet)=> {
-    return {id:snippet.id.toString()}
-  })
-}
- 
+  return snippets.map((snippet: (typeof snippets)[number]) => {
+    return { id: snippet.id.toString() };
+  });
+};
