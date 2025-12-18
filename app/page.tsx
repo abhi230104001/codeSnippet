@@ -1,10 +1,10 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
+import type { Snippet } from "@prisma/client";
 
 export default async function Home() {
-  const snippets = await prisma.snippet.findMany();
+  const snippets: Snippet[] = await prisma.snippet.findMany();
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -19,7 +19,7 @@ export default async function Home() {
       </div>
 
       <div className="space-y-4">
-        {snippets.map((snippet) => (
+        {snippets.map((snippet: Snippet) => (
           <div
             key={snippet.id}
             className="border rounded-lg p-4 flex items-center justify-between hover:bg-muted/30 transition"
