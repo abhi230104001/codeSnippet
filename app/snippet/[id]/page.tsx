@@ -7,14 +7,17 @@ import * as actions from "@/actions";
 import { notFound } from "next/navigation";
 
 type SnippetDetailsProps = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 const SnippetDetailPage = async ({ params }: SnippetDetailsProps) => {
-  const id = Number(params.id);
+  const { id } = await params;        // ✅ REQUIRED
+  const snippetId = Number(id);
+
+  if (Number.isNaN(snippetId)) notFound();
 
   const snippet = await prisma.snippet.findUnique({
-    where: { id },
+    where: { id: snippetId },
   });
 
   if (!snippet) notFound();
